@@ -4,25 +4,18 @@ import Home from '../screens/HomeScreen';
 import Leaderboard from '../screens/Leaderboard';
 import Game from '../screens/GameScreen';
 
-const screens = {
-    Home: {
-        screen: Home
-    },
-    Leaderboard: {
-        screen: Leaderboard
-    }
-}
-
-const MainStack = createStackNavigator(screens);
 
 const GameStack = createStackNavigator(
     {
-      Main: {
-        screen: MainStack,
-      },
-      Game: {
-        screen: Game,
-      },
+        Home: {
+            screen: Home
+        },
+        Game: {
+            screen: Game,
+        },
+        Leaderboard: {
+            screen: Leaderboard
+        }
     },
     {
       mode: 'modal',
