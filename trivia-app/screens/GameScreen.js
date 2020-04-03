@@ -1,15 +1,19 @@
 import React from 'react';
 import { StyleSheet, Text, View, Dimensions, Image, Animated, PanResponder } from 'react-native';
+import { db } from '../config/db';
+import Icon from 'react-native-vector-icons/Ionicons'
 
 const SCREEN_HEIGHT = Dimensions.get('window').height
 const SCREEN_WIDTH = Dimensions.get('window').width
-import Icon from 'react-native-vector-icons/Ionicons'
+
+let itemsRef = db.ref('/questions');
+
 const Users = [
-  { id: "1", uri: require('../assets/1.jpg') },
-  { id: "2", uri: require('../assets/2.jpg') },
-  { id: "3", uri: require('../assets/3.jpg') },
-  { id: "4", uri: require('../assets/4.jpg') },
-  { id: "5", uri: require('../assets/5.jpg') },
+  { id: "1", uri: require('../assets/quiz.jpg') },
+  { id: "2", uri: require('../assets/quiz.jpg') },
+  { id: "3", uri: require('../assets/quiz.jpg') },
+  { id: "4", uri: require('../assets/quiz.jpg') },
+  { id: "5", uri: require('../assets/quiz.jpg') },
 ]
 
 export default class Game extends React.Component {
@@ -113,13 +117,23 @@ export default class Game extends React.Component {
             key={item.id} style={[this.rotateAndTranslate, { height: SCREEN_HEIGHT - 120, width: SCREEN_WIDTH, padding: 10, position: 'absolute' }]}>
             <Animated.View style={{ opacity: this.likeOpacity, transform: [{ rotate: '-30deg' }], position: 'absolute', top: 50, left: 40, zIndex: 1000 }}>
               <Text style={{ borderWidth: 1, borderColor: 'green', color: 'green', fontSize: 32, fontWeight: '800', padding: 10 }}>TRUE</Text>
-
+          
             </Animated.View>
 
             <Animated.View style={{ opacity: this.dislikeOpacity, transform: [{ rotate: '30deg' }], position: 'absolute', top: 50, right: 40, zIndex: 1000 }}>
               <Text style={{ borderWidth: 1, borderColor: 'red', color: 'red', fontSize: 32, fontWeight: '800', padding: 10 }}>FALSE</Text>
 
             </Animated.View>
+            <View style={{
+        position: 'absolute',
+        marginTop: 0,
+        top: 100, left: 100,
+        alignItems:'center',
+        justifyContent:'center', 
+    backgroundColor: 'gray'
+}}>
+              <Text style={{ color: 'black', fontSize: 20, fontWeight: '500' }}>Test</Text>
+            </View>
 
             <Image
               style={{ flex: 1, height: null, width: null, resizeMode: 'cover', borderRadius: 20 }}

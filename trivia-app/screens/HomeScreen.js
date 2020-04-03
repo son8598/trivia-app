@@ -4,7 +4,6 @@ import MaterialButtonPink from "../components/MaterialButtonPink";
 import MaterialCommunityIconsIcon from "react-native-vector-icons/MaterialCommunityIcons";
 import MaterialButtonSuccess from "../components/MaterialButtonSuccess";
 
-
 export default function Home({ navigation }) {
     return (
         <View style={styles.container}>
@@ -12,6 +11,7 @@ export default function Home({ navigation }) {
         <View style={styles.rect}>
             <View style={styles.materialButtonPinkStack}>
             <MaterialButtonPink
+                navigation={navigation}
                 style={styles.materialButtonPink}
             ></MaterialButtonPink>
             <MaterialCommunityIconsIcon
@@ -23,6 +23,7 @@ export default function Home({ navigation }) {
         <View style={styles.group}>
             <View style={styles.materialButtonSuccessStack}>
             <MaterialButtonSuccess
+                navigation={navigation}
                 style={styles.materialButtonSuccess}
             ></MaterialButtonSuccess>
             <MaterialCommunityIconsIcon
@@ -51,7 +52,7 @@ const styles = StyleSheet.create({
     color: "rgba(179,229,252,1)",
     fontSize: 50,
     marginTop: 271,
-    marginLeft: 30
+    marginLeft: 30,
   },
   rect: {
     width: 225,

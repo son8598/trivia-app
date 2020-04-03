@@ -2,8 +2,9 @@ import React, { Component } from "react";
 import { StyleSheet, TouchableOpacity, Text } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 
+
 function MaterialButtonSuccess(props) {
-  const navigation = useNavigation();
+  const {navigation} = props;
   const pressHandlerLeaderboard = () => {
     navigation.navigate('Leaderboard')
   }

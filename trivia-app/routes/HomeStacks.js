@@ -1,5 +1,5 @@
 import { createStackNavigator } from 'react-navigation-stack';
-import {createAppContainer } from 'react-navigation';
+import { createAppContainer } from 'react-navigation';
 import Home from '../screens/HomeScreen';
 import Leaderboard from '../screens/Leaderboard';
 import Game from '../screens/GameScreen';
@@ -18,7 +18,6 @@ const GameStack = createStackNavigator(
         }
     },
     {
-      mode: 'modal',
       headerMode: 'none',
     }
   );

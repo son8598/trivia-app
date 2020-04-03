@@ -3,7 +3,7 @@ import { StyleSheet, TouchableOpacity, Text } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 
 function MaterialButtonPink(props) {
-  const navigation = useNavigation();
+  const {navigation} = props;
   const pressHandlerGame = () => {
     navigation.navigate('Game')
   }
