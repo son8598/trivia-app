@@ -2,19 +2,13 @@ import React from 'react';
 import { StyleSheet, Text, View, Dimensions, Image, Animated, PanResponder } from 'react-native';
 import { db } from '../config/db';
 import Icon from 'react-native-vector-icons/Ionicons'
+import QuestionComponent from '../components/QuestionComponent';
+import BackgroundImage from '../assets/quiz.jpg';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height
 const SCREEN_WIDTH = Dimensions.get('window').width
 
-let itemsRef = db.ref('/questions');
-
-const Users = [
-  { id: "1", uri: require('../assets/quiz.jpg') },
-  { id: "2", uri: require('../assets/quiz.jpg') },
-  { id: "3", uri: require('../assets/quiz.jpg') },
-  { id: "4", uri: require('../assets/quiz.jpg') },
-  { id: "5", uri: require('../assets/quiz.jpg') },
-]
+const itemsRef = db.ref('/questions');
 
 export default class Game extends React.Component {
 
@@ -23,7 +17,9 @@ export default class Game extends React.Component {
 
     this.position = new Animated.ValueXY()
     this.state = {
-      currentIndex: 0
+      currentIndex: 0,
+      questions: [],
+      score: 0
     }
 
     this.rotate = this.position.x.interpolate({
@@ -101,16 +97,21 @@ export default class Game extends React.Component {
     })
   }
 
+  componentDidMount() {
+    itemsRef.on('value', (snapshot) => {
+        const data = snapshot.val();
+        const questions = Object.values(data);
+        this.setState({questions});
+     });
+  }
+
   renderUsers = () => {
 
-    return Users.map((item, i) => {
-
-
+    return this.state.questions.map((item, i) => {
       if (i < this.state.currentIndex) {
         return null
       }
       else if (i == this.state.currentIndex) {
-
         return (
           <Animated.View
             {...this.PanResponder.panHandlers}
@@ -124,20 +125,14 @@ export default class Game extends React.Component {
               <Text style={{ borderWidth: 1, borderColor: 'red', color: 'red', fontSize: 32, fontWeight: '800', padding: 10 }}>FALSE</Text>
 
             </Animated.View>
-            <View style={{
-        position: 'absolute',
-        marginTop: 0,
-        top: 100, left: 100,
-        alignItems:'center',
-        justifyContent:'center', 
-    backgroundColor: 'gray'
-}}>
-              <Text style={{ color: 'black', fontSize: 20, fontWeight: '500' }}>Test</Text>
-            </View>
+
+            <Animated.View style={{ position: 'absolute', alignItems: 'center', top: 250, right: 70, left: 80, zIndex: 1000 }}>
+                <QuestionComponent question={item.question} />
+            </Animated.View>
 
             <Image
               style={{ flex: 1, height: null, width: null, resizeMode: 'cover', borderRadius: 20 }}
-              source={item.uri} />
+              source={BackgroundImage} />
 
           </Animated.View>
         )
@@ -163,7 +158,7 @@ export default class Game extends React.Component {
 
             <Image
               style={{ flex: 1, height: null, width: null, resizeMode: 'cover', borderRadius: 20 }}
-              source={item.uri} />
+              source={BackgroundImage} />
 
           </Animated.View>
         )
