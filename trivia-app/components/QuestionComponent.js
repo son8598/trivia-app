@@ -7,6 +7,7 @@ const styles = StyleSheet.create({
         color: 'black', 
         fontSize: 30, 
         fontWeight: '500',
+        textAlign: 'center'
     }
 });
 

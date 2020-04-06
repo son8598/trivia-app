@@ -4,6 +4,7 @@ import { db } from '../config/db';
 import Icon from 'react-native-vector-icons/Ionicons'
 import QuestionComponent from '../components/QuestionComponent';
 import BackgroundImage from '../assets/quiz.jpg';
+import * as Speech from 'expo-speech';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height
 const SCREEN_WIDTH = Dimensions.get('window').width
@@ -19,10 +20,12 @@ export default class Game extends React.Component {
     this.state = {
       currentIndex: 0,
       questions: [],
-      score: 0
+      userAnswer: 0,
+      score: 0,
+      isVoice: false
     }
 
-    this.rotate = this.position.x.interpolate({
+     this.rotate = this.position.x.interpolate({
       inputRange: [-SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2],
       outputRange: ['-10deg', '0deg', '10deg'],
       extrapolate: 'clamp'
@@ -73,7 +76,7 @@ export default class Game extends React.Component {
           Animated.spring(this.position, {
             toValue: { x: SCREEN_WIDTH + 100, y: gestureState.dy }
           }).start(() => {
-            this.setState({ currentIndex: this.state.currentIndex + 1 }, () => {
+            this.setState({ currentIndex: this.state.currentIndex + 1, userAnswer: 1 }, () => {
               this.position.setValue({ x: 0, y: 0 })
             })
           })
@@ -82,7 +85,7 @@ export default class Game extends React.Component {
           Animated.spring(this.position, {
             toValue: { x: -SCREEN_WIDTH - 100, y: gestureState.dy }
           }).start(() => {
-            this.setState({ currentIndex: this.state.currentIndex + 1 }, () => {
+            this.setState({ currentIndex: this.state.currentIndex + 1, userAnswer: 0 }, () => {
               this.position.setValue({ x: 0, y: 0 })
             })
           })
@@ -105,13 +108,24 @@ export default class Game extends React.Component {
      });
   }
 
-  renderUsers = () => {
+  componentDidUpdate(prevProps, prevState) {
 
+    if(this.state.currentIndex != prevState.currentIndex){
+      if(this.state.userAnswer == this.state.questions[prevState.currentIndex].answer){
+        this.setState({ score: this.state.score + 1})
+      }
+    }
+  }
+
+  renderUsers = () => {
     return this.state.questions.map((item, i) => {
       if (i < this.state.currentIndex) {
         return null
       }
       else if (i == this.state.currentIndex) {
+        if(this.state.isVoice){
+          Speech.speak(item.question);
+        }
         return (
           <Animated.View
             {...this.PanResponder.panHandlers}
@@ -150,10 +164,15 @@ export default class Game extends React.Component {
               <Text style={{ borderWidth: 1, borderColor: 'green', color: 'green', fontSize: 32, fontWeight: '800', padding: 10 }}>TRUE</Text>
 
             </Animated.View>
+            
 
             <Animated.View style={{ opacity: 0, transform: [{ rotate: '30deg' }], position: 'absolute', top: 50, right: 40, zIndex: 1000 }}>
               <Text style={{ borderWidth: 1, borderColor: 'red', color: 'red', fontSize: 32, fontWeight: '800', padding: 10 }}>FALSE</Text>
 
+            </Animated.View>
+
+            <Animated.View style={{ position: 'absolute', alignItems: 'center', top: 250, right: 70, left: 80, zIndex: 1000 }}>
+                <QuestionComponent question={this.state.questions[i].question} />
             </Animated.View>
 
             <Image
@@ -169,9 +188,10 @@ export default class Game extends React.Component {
   render() {
     return (
       <View style={{ flex: 1 }}>
-        <View style={{ height: 60 }}>
+        <View style={{ height: 50 }}>
 
         </View>
+        <Text style={{ fontSize: 22, fontWeight: '800', padding: 10, textAlign: 'right' }}>Score: {this.state.score}</Text>
         <View style={{ flex: 1 }}>
           {this.renderUsers()}
         </View>
