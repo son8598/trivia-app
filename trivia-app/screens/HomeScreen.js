@@ -1,3 +1,5 @@
+// Home screen 
+
 import React, { useEffect } from "react";
 import { StyleSheet, View, Text, Image, AsyncStorage } from "react-native";
 import StartButton from "../components/StartButton";
@@ -7,6 +9,7 @@ import ComicText from "../components/ComicText";
 
 
 export default function Home ({ navigation }) {
+  // Initialize local storage
   useEffect(() => {
     const _initStorage = async () => {
       const leaderboard = await AsyncStorage.getItem('leaderboard');
@@ -17,7 +20,7 @@ export default function Home ({ navigation }) {
     _initStorage();
   }, []);
     return (
-        <View style={styles.container}>
+      <View style={styles.container}>
         <ComicText style={styles.triviasTime} text='Trivia Time' />
         <View style={styles.rect}>
             <View style={styles.materialButtonPinkStack}>

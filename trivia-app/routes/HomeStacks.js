@@ -1,3 +1,5 @@
+// Create a navigation stack to navigate between screens
+
 import { createStackNavigator } from 'react-navigation-stack';
 import { createAppContainer } from 'react-navigation';
 import Home from '../screens/HomeScreen';

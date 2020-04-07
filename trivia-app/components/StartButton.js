@@ -1,3 +1,5 @@
+// Start button class on Home Screen
+
 import React, { Component } from "react";
 import { StyleSheet, TouchableOpacity, Text } from "react-native";
 import ComicText from "../components/ComicText";

@@ -1,3 +1,5 @@
+// Main code for the Records screen
+
 import React, { Component } from 'react';
 import { StyleSheet, View, Text, AsyncStorage } from 'react-native';
 
@@ -10,11 +12,13 @@ export default class Landing extends React.Component {
     }
   }
 
+  // Get data from local storage
   componentDidMount = async() => {
     const history = JSON.parse(await AsyncStorage.getItem('leaderboard'));
     this.setState({history: history});
   }
 
+  // Display the most recent 10 records
   renderHistory = () => {
     return this.state.history.reverse().map((item, i) => {
       if(i < 10){

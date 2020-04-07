@@ -1,3 +1,5 @@
+// Set up file for connection with Firebase
+
 import Firebase from 'firebase';
  let config = {
     apiKey: "AIzaSyBZCFkDmimphO3Z9rX_8Pwq3jfKUvzlVxg",

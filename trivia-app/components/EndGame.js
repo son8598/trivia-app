@@ -1,3 +1,5 @@
+// Transition screen after a game ends
+
 import React, { Component } from "react";
 import { StyleSheet, View, Text } from "react-native";
 import EndGameButton from "./EndGameButton";

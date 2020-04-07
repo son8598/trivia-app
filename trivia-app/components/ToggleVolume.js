@@ -1,3 +1,5 @@
+// Toggle volume button class to use in Game Screen
+
 import React, { Component } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";

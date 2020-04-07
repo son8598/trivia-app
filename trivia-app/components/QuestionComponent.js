@@ -1,18 +1,10 @@
+// Question class to show on the swiping card on Game Screen
+
 import React, { Component } from 'react';
 import {  View, Text, StyleSheet} from 'react-native';
 import PropTypes from 'prop-types';
 
-const styles = StyleSheet.create({
-    questiontext: {
-        color: 'black', 
-        fontSize: 30, 
-        fontWeight: '500',
-        textAlign: 'center'
-    }
-});
-
 export default class QuestionComponent extends Component {
-
   static propTypes = {
       question: PropTypes.string
   };
@@ -25,3 +17,12 @@ export default class QuestionComponent extends Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  questiontext: {
+      color: 'black', 
+      fontSize: 30, 
+      fontWeight: '500',
+      textAlign: 'center'
+  }
+});

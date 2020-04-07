@@ -1,4 +1,6 @@
-import React, { Component } from "react";
+// A button class to navigate between screen at end game
+
+import React from "react";
 import { StyleSheet, TouchableOpacity, Text } from "react-native";
 
 function EndGameButton(props) {
