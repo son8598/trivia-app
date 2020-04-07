@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { StyleSheet, TouchableOpacity, Text } from "react-native";
-import { useNavigation } from '@react-navigation/native';
 import ComicText from "../components/ComicText";
 
 function StartButton(props) {

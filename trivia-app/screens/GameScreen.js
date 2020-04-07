@@ -5,6 +5,7 @@ import QuestionComponent from '../components/QuestionComponent';
 import BackgroundImage from '../assets/quiz.jpg';
 import * as Speech from 'expo-speech';
 import ToggleVolume from '../components/ToggleVolume';
+import EndGame from '../components/EndGame';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height
 const SCREEN_WIDTH = Dimensions.get('window').width
@@ -102,7 +103,7 @@ export default class Game extends React.Component {
   }
 
   componentDidMount() {
-    itemsRef.limitToFirst(2).on('value', (snapshot) => {
+    itemsRef.limitToLast(5).on('value', (snapshot) => {
         const data = snapshot.val();
         const questions = Object.values(data);
         this.setState({questions});
@@ -113,15 +114,17 @@ export default class Game extends React.Component {
       const leaderboard = JSON.parse(await AsyncStorage.getItem('leaderboard'));
       leaderboard.push({timestamp: (new Date()).toLocaleDateString('en-US') ,score});
       await AsyncStorage.setItem('leaderboard',JSON.stringify(leaderboard));
-      console.log(JSON.parse(await AsyncStorage.getItem('leaderboard')));
   };
 
   componentDidUpdate(prevProps, prevState) {
     if(this.state.gameOver && !prevState.gameOver){
       this.updateLeaderboard(this.state.score); 
+      if(this.state.isVoice){
+        Speech.speak('Game over. You scored' + this.state.score + ' points');
+      }
     }
     if(this.state.currentIndex != prevState.currentIndex){
-      if(this.state.isVoice){
+      if(this.state.isVoice && this.state.currentIndex < this.state.questions.length){
         Speech.speak(this.state.questions[this.state.currentIndex].question);
       }
       if(this.state.currentIndex == this.state.questions.length){
@@ -134,7 +137,7 @@ export default class Game extends React.Component {
   }
 
   toggleVolume(){
-    if(!this.state.isVoice){
+    if(!this.state.isVoice && this.state.currentIndex < this.state.questions.length){
       Speech.speak(this.state.questions[this.state.currentIndex].question);
     }
     this.setState({ isVoice: !this.state.isVoice})
@@ -222,9 +225,7 @@ export default class Game extends React.Component {
         </View>
 
         <View style={{ flex: 1 }}>
-          <View style={{alignItems: 'center' }}>
-            <Text>Hihi</Text>
-          </View>
+          <EndGame navigation={this.props.navigation} score={this.state.score} />
           {this.renderUsers()}
         </View>
         

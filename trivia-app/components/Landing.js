@@ -31,7 +31,7 @@ export default class Landing extends React.Component {
     return (
       <View style={styles.container} >
         <View style={styles.header}>
-          <Text style={styles.headerText}>History</Text>
+          <Text style={styles.headerText}>Records</Text>
         </View>
         <View style={{ height: 30 }}>
         </View>

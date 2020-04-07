@@ -10,7 +10,7 @@ function LeaderboardButton(props) {
   }
   return (
     <TouchableOpacity style={[styles.container, props.style]} onPress={pressHandlerLeaderboard}>
-      <ComicText style={styles.caption} text='History' />
+      <ComicText style={styles.caption} text='Records' />
     </TouchableOpacity>
   );
 }
