@@ -1,10 +1,10 @@
 import React from 'react';
-import { StyleSheet, Text, View, Dimensions, Image, Animated, PanResponder } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, Image, Animated, PanResponder, AsyncStorage } from 'react-native';
 import { db } from '../config/db';
-import Icon from 'react-native-vector-icons/Ionicons'
 import QuestionComponent from '../components/QuestionComponent';
 import BackgroundImage from '../assets/quiz.jpg';
 import * as Speech from 'expo-speech';
+import ToggleVolume from '../components/ToggleVolume';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height
 const SCREEN_WIDTH = Dimensions.get('window').width
@@ -22,7 +22,8 @@ export default class Game extends React.Component {
       questions: [],
       userAnswer: 0,
       score: 0,
-      isVoice: false
+      isVoice: false,
+      gameOver: false,
     }
 
      this.rotate = this.position.x.interpolate({
@@ -101,20 +102,42 @@ export default class Game extends React.Component {
   }
 
   componentDidMount() {
-    itemsRef.on('value', (snapshot) => {
+    itemsRef.limitToFirst(2).on('value', (snapshot) => {
         const data = snapshot.val();
         const questions = Object.values(data);
         this.setState({questions});
      });
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  updateLeaderboard = async (score) => {
+      const leaderboard = JSON.parse(await AsyncStorage.getItem('leaderboard'));
+      leaderboard.push({timestamp: (new Date()).toLocaleDateString('en-US') ,score});
+      await AsyncStorage.setItem('leaderboard',JSON.stringify(leaderboard));
+      console.log(JSON.parse(await AsyncStorage.getItem('leaderboard')));
+  };
 
+  componentDidUpdate(prevProps, prevState) {
+    if(this.state.gameOver && !prevState.gameOver){
+      this.updateLeaderboard(this.state.score); 
+    }
     if(this.state.currentIndex != prevState.currentIndex){
+      if(this.state.isVoice){
+        Speech.speak(this.state.questions[this.state.currentIndex].question);
+      }
+      if(this.state.currentIndex == this.state.questions.length){
+        this.setState({ gameOver: true})
+      }
       if(this.state.userAnswer == this.state.questions[prevState.currentIndex].answer){
         this.setState({ score: this.state.score + 1})
       }
     }
+  }
+
+  toggleVolume(){
+    if(!this.state.isVoice){
+      Speech.speak(this.state.questions[this.state.currentIndex].question);
+    }
+    this.setState({ isVoice: !this.state.isVoice})
   }
 
   renderUsers = () => {
@@ -123,9 +146,6 @@ export default class Game extends React.Component {
         return null
       }
       else if (i == this.state.currentIndex) {
-        if(this.state.isVoice){
-          Speech.speak(item.question);
-        }
         return (
           <Animated.View
             {...this.PanResponder.panHandlers}
@@ -187,14 +207,27 @@ export default class Game extends React.Component {
 
   render() {
     return (
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, flexDirection: 'column' }}>
         <View style={{ height: 50 }}>
 
         </View>
-        <Text style={{ fontSize: 22, fontWeight: '800', padding: 10, textAlign: 'right' }}>Score: {this.state.score}</Text>
+
+        <View style={{ flex:0, flexDirection: 'row'}}>
+          <View style={styles.volumeContainer}>
+            <ToggleVolume volumeOn={this.state.isVoice} onPress={() => this.toggleVolume()} />
+          </View>
+          <View style={{ left: 190}}>
+            <Text style={{ color: '#1e3799', fontSize: 22, fontWeight: '800', padding: 10, textAlign: 'right' }}>Score: {this.state.score}</Text>
+          </View>
+        </View>
+
         <View style={{ flex: 1 }}>
+          <View style={{alignItems: 'center' }}>
+            <Text>Hihi</Text>
+          </View>
           {this.renderUsers()}
         </View>
+        
         <View style={{ height: 60 }}>
 
         </View>
@@ -212,5 +245,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  volumeContainer: {
+    width: 56,
+    height: 56,
+    left: 20
   },
 });

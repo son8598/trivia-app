@@ -1,19 +1,30 @@
-import React, { Component } from "react";
-import { StyleSheet, View, Text, Image } from "react-native";
-import MaterialButtonPink from "../components/MaterialButtonPink";
+import React, { useEffect } from "react";
+import { StyleSheet, View, Text, Image, AsyncStorage } from "react-native";
+import StartButton from "../components/StartButton";
 import MaterialCommunityIconsIcon from "react-native-vector-icons/MaterialCommunityIcons";
-import MaterialButtonSuccess from "../components/MaterialButtonSuccess";
+import LeaderboardButton from "../components/LeaderboardButton";
+import ComicText from "../components/ComicText";
 
-export default function Home({ navigation }) {
+
+export default function Home ({ navigation }) {
+  useEffect(() => {
+    const _initStorage = async () => {
+      const leaderboard = await AsyncStorage.getItem('leaderboard');
+      if (!leaderboard) {
+        await AsyncStorage.setItem('leaderboard', JSON.stringify([]));
+      }
+    };
+    _initStorage();
+  }, []);
     return (
         <View style={styles.container}>
-        <Text style={styles.triviasTime}>Trivia&#39;s Time</Text>
+        <ComicText style={styles.triviasTime} text='Trivia Time' />
         <View style={styles.rect}>
             <View style={styles.materialButtonPinkStack}>
-            <MaterialButtonPink
+            <StartButton
                 navigation={navigation}
                 style={styles.materialButtonPink}
-            ></MaterialButtonPink>
+            ></StartButton>
             <MaterialCommunityIconsIcon
                 name="book-open-page-variant"
                 style={styles.icon3}
@@ -22,10 +33,10 @@ export default function Home({ navigation }) {
         </View>
         <View style={styles.group}>
             <View style={styles.materialButtonSuccessStack}>
-            <MaterialButtonSuccess
+            <LeaderboardButton
                 navigation={navigation}
                 style={styles.materialButtonSuccess}
-            ></MaterialButtonSuccess>
+            ></LeaderboardButton>
             <MaterialCommunityIconsIcon
                 name="chart-line-variant"
                 style={styles.icon2}
@@ -52,7 +63,7 @@ const styles = StyleSheet.create({
     color: "rgba(179,229,252,1)",
     fontSize: 50,
     marginTop: 271,
-    marginLeft: 30,
+    marginLeft: 35,
   },
   rect: {
     width: 225,
